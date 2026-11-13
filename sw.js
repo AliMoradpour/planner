@@ -1,11 +1,16 @@
-var VERSION = 'planner-v1';
+var VERSION = 'planner-v2';
 var FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './fonts/Doran-Regular.woff2',
+  './fonts/Doran-Medium.woff2',
+  './fonts/Doran-ExtraBold.woff2',
+  './fonts/Doran-ExtraBlack.woff2',
+  './fonts/Hasti-Heavy.woff2'
 ];
 
 self.addEventListener('install', function (e) {
