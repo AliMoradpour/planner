@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="برنامه ۱۲ هفته">
+<title>برنامه ۱۲ هفته</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root {
+  --bg: #f6f4ef;
+  --card: #ffffff;
+  --text: #1d1d1f;
+  --muted: #6b6b70;
+  --line: #e3e0d8;
+  --accent: #2f6f5e;
+  --accent-text: #ffffff;
+  --soft: #e7f0ec;
+  --warn: #b5562b;
+  --warn-soft: #f7e6dc;
+  --min: #d9b44a;
+  --miss: #e2ddd3;
+  --font: Tahoma, system-ui, sans-serif;
+  --font-display: Tahoma, system-ui, sans-serif;
+  --tabbar-h: 60px;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16171a;
+    --card: #212226;
+    --text: #ececec;
+    --muted: #9a9aa2;
+    --line: #34353b;
+    --accent: #5fb39a;
+    --accent-text: #0f1513;
+    --soft: #1f2e29;
+    --warn: #e08a5f;
+    --warn-soft: #3a261c;
+    --min: #c9a43c;
+    --miss: #2c2d32;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(var(--tabbar-h) + 24px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+}
+h1 { font-family: var(--font-display); font-weight: 900; font-size: 26px; line-height: 1.4; margin: 4px 0 2px; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.5; margin: 0 0 10px; }
+.date { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.card.warn { background: var(--warn-soft); border-color: transparent; }
+.main-task { font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1.5; margin: 0 0 8px; }
+.meta { color: var(--muted); font-size: 14px; margin: 2px 0; }
+.meta b { color: var(--text); font-weight: 500; }
+label.field { display: block; margin-bottom: 12px; }
+label.field > span { display: block; font-size: 14px; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
+input[type=text], input[type=date], input[type=number], textarea, select {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+textarea { min-height: 88px; resize: vertical; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.check { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 0; cursor: pointer; }
+.check input { width: 24px; height: 24px; margin: 0; flex: none; accent-color: var(--accent); }
+.check span { flex: 1; }
+.check.done span { color: var(--muted); text-decoration: line-through; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font: inherit; font-weight: 700;
+  min-height: 44px; padding: 8px 18px;
+  border-radius: 12px; border: 1px solid transparent;
+  background: var(--accent); color: var(--accent-text);
+  cursor: pointer;
+}
+.btn.ghost { background: transparent; color: var(--accent); border-color: var(--line); }
+.btn.warn { background: transparent; color: var(--warn); border-color: var(--warn); }
+.btn.block { display: flex; width: 100%; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > * { flex: 1; }
+.seg { display: flex; gap: 8px; margin-bottom: 12px; }
+.seg button { flex: 1; font: inherit; font-weight: 500; min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+.seg button.on { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.stats { display: flex; gap: 10px; margin-bottom: 14px; }
+.stat { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 8px; text-align: center; }
+.stat b { display: block; font-family: var(--font-display); font-weight: 900; font-size: 30px; line-height: 1.3; }
+.stat small { color: var(--muted); font-size: 13px; }
+.steps { margin: 0 0 8px; padding-inline-start: 22px; }
+.steps li { margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: auto repeat(7, 1fr); gap: 4px; align-items: center; font-size: 12px; }
+.grid .wk { color: var(--muted); padding-inline-end: 4px; white-space: nowrap; }
+.grid .hd { color: var(--muted); text-align: center; }
+.cell { aspect-ratio: 1; border-radius: 6px; background: transparent; border: 1px dashed var(--line); }
+.cell.done { background: var(--accent); border: 0; }
+.cell.min { background: var(--min); border: 0; }
+.cell.miss { background: var(--miss); border: 0; }
+.cell.today { outline: 2px solid var(--text); outline-offset: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: middle; margin-inline-end: 4px; }
+.advice { margin: 0; padding-inline-start: 20px; }
+.advice li { margin-bottom: 8px; }
+.muted { color: var(--muted); font-size: 14px; }
+.note { font-size: 14px; color: var(--accent); min-height: 1.5em; margin-top: 6px; }
+.hidden { display: none !important; }
+nav.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+nav.tabs button {
+  flex: 1; height: var(--tabbar-h);
+  font: inherit; font-size: 13px; font-weight: 500;
+  background: none; border: 0; color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  cursor: pointer;
+}
+nav.tabs button .ico { font-size: 20px; line-height: 1; }
+nav.tabs button.on { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav class="tabs" id="tabs">
+  <button type="button" data-tab="today"><span class="ico">☀</span>امروز</button>
+  <button type="button" data-tab="tonight"><span class="ico">☾</span>امشب</button>
+  <button type="button" data-tab="week"><span class="ico">▦</span>هفته</button>
+  <button type="button" data-tab="progress"><span class="ico">↗</span>پیشرفت</button>
+  <button type="button" data-tab="goals"><span class="ico">◎</span>هدف‌ها</button>
+</nav>
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'planner12-v1';
+  var DAY_FIELDS = ['main', 'firstStep', 'when', 'side1', 'side2', 'floor', 'mainDone', 'side1Done', 'side2Done', 'floorDone', 'broken', 'reason', 'change', 'prep1', 'prep2'];
+  var WEEK_FIELDS = ['score', 'best', 'worst', 'waster', 'longer', 'rule'];
+  var FA_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
+
+  /* ---------- dates (local time, never UTC) ---------- */
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function keyOf(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function dateOf(k) { var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2], 12, 0, 0); }
+  function addDays(k, n) { var d = dateOf(k); d.setDate(d.getDate() + n); return keyOf(d); }
+  function todayKey() { return keyOf(new Date()); }
+  function saturdayOf(k) { var d = dateOf(k); var off = (d.getDay() + 1) % 7; d.setDate(d.getDate() - off); return keyOf(d); }
+  function daysBetween(a, b) { return Math.round((dateOf(b) - dateOf(a)) / 86400000); }
+
+  function fa(x) { return String(x).replace(/[0-9]/g, function (c) { return FA_DIGITS.charAt(+c); }); }
+
+  var fmtCache = {};
+  function jdate(k, opts, id) {
+    var f = fmtCache[id];
+    if (!f) {
+      try { f = new Intl.DateTimeFormat('fa-IR-u-ca-persian', opts); } catch (e) { f = null; }
+      fmtCache[id] = f;
+    }
+    var d = dateOf(k);
+    return f ? f.format(d) : fa(k);
+  }
+  function longDate(k) { return jdate(k, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }, 'long'); }
+  function shortDate(k) { return jdate(k, { day: 'numeric', month: 'long' }, 'short'); }
+  function weekdayName(k) { return jdate(k, { weekday: 'long' }, 'wd'); }
+
+  /* ---------- state ---------- */
+  function defaults() {
+    return {
+      goals: [{ title: '', floor: '' }, { title: '', floor: '' }],
+      startDate: saturdayOf(todayKey()),
+      days: {},
+      weeks: {},
+      wins: '',
+      updatedAt: 0
+    };
+  }
+
+  function normalize(s) {
+    var d = defaults();
+    if (!s || typeof s !== 'object') return d;
+    var out = {};
+    var k;
+    for (k in s) if (Object.prototype.hasOwnProperty.call(s, k)) out[k] = s[k];
+    if (!(out.goals instanceof Array)) out.goals = d.goals;
+    while (out.goals.length < 2) out.goals.push({ title: '', floor: '' });
+    if (typeof out.startDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(out.startDate)) out.startDate = d.startDate;
+    if (!out.days || typeof out.days !== 'object') out.days = {};
+    if (!out.weeks || typeof out.weeks !== 'object') out.weeks = {};
+    if (out.wins === undefined || out.wins === null) out.wins = '';
+    if (!out.updatedAt) out.updatedAt = 0;
+    return out;
+  }
+
+  function load() {
+    try { return normalize(JSON.parse(localStorage.getItem(KEY))); } catch (e) { return defaults(); }
+  }
+
+  var state = load();
+
+  function save() {
+    state.updatedAt = Date.now();
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function day(k, create) {
+    var d = state.days[k];
+    if (!d && create) {
+      d = {};
+      for (var i = 0; i < DAY_FIELDS.length; i++) {
+        var f = DAY_FIELDS[i];
+        d[f] = /Done$|^broken$|^prep/.test(f) ? false : '';
+      }
+      state.days[k] = d;
+    }
+    return d || null;
+  }
+
+  function week(k, create) {
+    var w = state.weeks[k];
+    if (!w && create) {
+      w = { results: [{ t: '', done: false }, { t: '', done: false }, { t: '', done: false }] };
+      for (var i = 0; i < WEEK_FIELDS.length; i++) w[WEEK_FIELDS[i]] = '';
+      state.weeks[k] = w;
+    }
+    if (w && !(w.results instanceof Array)) w.results = [];
+    if (w) while (w.results.length < 3) w.results.push({ t: '', done: false });
+    return w || null;
+  }
+
+  function winsText() { return state.wins instanceof Array ? state.wins.join('\n') : String(state.wins || ''); }
+
+  function hasData(d) {
+    if (!d) return false;
+    for (var i = 0; i < DAY_FIELDS.length; i++) if (d[DAY_FIELDS[i]]) return true;
+    return false;
+  }
+  function kept(d) { return !!(d && (d.mainDone || d.floorDone)); }
+
+  function firstDataDay() {
+    var first = null;
+    for (var k in state.days) {
+      if (Object.prototype.hasOwnProperty.call(state.days, k) && hasData(state.days[k]) && (!first || k < first)) first = k;
+    }
+    return first;
+  }
+
+  function floorFromGoals() {
+    var parts = [];
+    for (var i = 0; i < state.goals.length; i++) if (state.goals[i] && state.goals[i].floor) parts.push(state.goals[i].floor);
+    return parts.join(' + ');
+  }
+
+  /* ---------- path binding: data-k="day|<date>|field" etc. ---------- */
+  function getVal(path) {
+    var p = path.split('|');
+    if (p[0] === 'day') { var d = day(p[1]); return d ? d[p[2]] : ''; }
+    if (p[0] === 'week') { var w = week(p[1]); return w ? w[p[2]] : ''; }
+    if (p[0] === 'wres') { var w2 = week(p[1]); return w2 ? w2.results[+p[2]][p[3]] : ''; }
+    if (p[0] === 'goal') return state.goals[+p[1]][p[2]];
+    if (p[0] === 'startDate') return state.startDate;
+    if (p[0] === 'wins') return winsText();
+    return '';
+  }
+
+  function setVal(path, v) {
+    var p = path.split('|');
+    if (p[0] === 'day') day(p[1], true)[p[2]] = v;
+    else if (p[0] === 'week') week(p[1], true)[p[2]] = v;
+    else if (p[0] === 'wres') week(p[1], true).results[+p[2]][p[3]] = v;
+    else if (p[0] === 'goal') state.goals[+p[1]][p[2]] = v;
+    else if (p[0] === 'startDate') { if (/^\d{4}-\d{2}-\d{2}$/.test(v)) state.startDate = v; }
+    else if (p[0] === 'wins') state.wins = state.wins instanceof Array ? v.split('\n') : v;
+    save();
+  }
+
+  /* ---------- html helpers ---------- */
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function text(path, label, ph) {
+    return '<label class="field"><span>' + label + '</span><input type="text" data-k="' + path + '" value="' + esc(getVal(path)) + '" placeholder="' + esc(ph || '') + '"></label>';
+  }
+  function area(path, label, ph) {
+    return '<label class="field"><span>' + label + '</span><textarea data-k="' + path + '" placeholder="' + esc(ph || '') + '">' + esc(getVal(path)) + '</textarea></label>';
+  }
+  function check(path, label) {
+    var on = !!getVal(path);
+    return '<label class="check' + (on ? ' done' : '') + '"><input type="checkbox" data-k="' + path + '"' + (on ? ' checked' : '') + '><span>' + label + '</span></label>';
+  }
+
+  /* ---------- tabs ---------- */
+  var current = 'today';
+  try { current = sessionStorage.getItem('planner12-tab') || 'today'; } catch (e) {}
+  var app = document.getElementById('app');
+  var tabs = document.getElementById('tabs');
+
+  function render() {
+    var fn = views[current] || views.today;
+    app.innerHTML = fn();
+    var btns = tabs.getElementsByTagName('button');
+    for (var i = 0; i < btns.length; i++) btns[i].className = btns[i].getAttribute('data-tab') === current ? 'on' : '';
+  }
+
+  var views = {};
+
+  views.today = function () {
+    var k = todayKey();
+    var d = day(k);
+    var h = '<h1>امروز</h1><div class="date">' + longDate(k) + '</div>';
+    if (!d || !d.main) {
+      h += '<div class="card"><h2>برای امروز برنامه‌ای نداری</h2>' +
+        '<p class="muted">فقط دو چیز بنویس و شروع کن.</p>' +
+        text('day|' + k + '|main', 'کار اصلی امروز', 'مهم‌ترین کار امروز') +
+        text('day|' + k + '|floor', 'نسخهٔ حداقلی', floorFromGoals()) +
+        '<button type="button" class="btn block" data-act="quickplan">شروع کن</button></div>';
+      return h;
+    }
+    if (d.broken) {
+      h += '<div class="card warn"><h2>روزم خراب شد — حالت نجات</h2>' +
+        '<ol class="steps">' +
+        '<li>یک نفس عمیق. یک روز خراب، شکست نیست.</li>' +
+        '<li>فقط نسخهٔ حداقلی را انجام بده: <b>' + esc(d.floor || floorFromGoals() || '—') + '</b></li>' +
+        '<li>امشب برای فردا برنامه بریز.</li>' +
+        '</ol>' +
+        check('day|' + k + '|floorDone', 'نسخهٔ حداقلی را انجام دادم') +
+        '</div><button type="button" class="btn ghost block" data-act="unbreak">برگشت به برنامهٔ عادی</button>';
+      return h;
+    }
+    h += '<div class="card"><p class="main-task">' + esc(d.main) + '</p>';
+    if (d.firstStep) h += '<p class="meta">قدم اول: <b>' + esc(d.firstStep) + '</b></p>';
+    if (d.when) h += '<p class="meta">زمان و مکان: <b>' + esc(d.when) + '</b></p>';
+    h += '</div><div class="card">' + check('day|' + k + '|mainDone', 'کار اصلی: ' + esc(d.main));
+    if (d.side1) h += check('day|' + k + '|side1Done', esc(d.side1));
+    if (d.side2) h += check('day|' + k + '|side2Done', esc(d.side2));
+    if (d.floor) h += check('day|' + k + '|floorDone', 'حداقل: ' + esc(d.floor));
+    h += '</div><button type="button" class="btn warn block" data-act="break">روزم خراب شد</button>';
+    return h;
+  };
+
+  views.tonight = function () {
+    var k = todayKey();
+    var t = addDays(k, 1);
+    var d = day(k) || {};
+    var td = day(t);
+    var h = '<h1>امشب</h1><div class="date">' + longDate(k) + '</div>';
+    h += '<div class="card"><h2>مرور امروز</h2>' +
+      (d.main ? '<p class="meta">کار اصلی: <b>' + esc(d.main) + '</b></p>' : '') +
+      '<p class="muted">کار اصلی انجام شد؟</p>' +
+      '<div class="seg"><button type="button" data-act="done-yes" class="' + (d.mainDone ? 'on' : '') + '">بله</button>' +
+      '<button type="button" data-act="done-no" class="' + (d.main && !d.mainDone && (d.reason || d.change) ? 'on' : '') + '">نه</button></div>';
+    if (!d.mainDone) h += area('day|' + k + '|reason', 'دلیل واقعی', 'صادقانه، بدون قضاوت');
+    h += text('day|' + k + '|change', 'یک چیز که فردا عوض می‌کنم') + '</div>';
+    h += '<div class="card"><h2>برنامهٔ فردا — ' + esc(weekdayName(t)) + '</h2>' +
+      text('day|' + t + '|main', 'کار اصلی') +
+      text('day|' + t + '|firstStep', 'قدم اول', 'کوچک و مشخص') +
+      text('day|' + t + '|when', 'زمان و مکان', 'مثلاً ساعت ۷ پشت میز') +
+      text('day|' + t + '|side1', 'کار جانبی ۱') +
+      text('day|' + t + '|side2', 'کار جانبی ۲') +
+      '<label class="field"><span>نسخهٔ حداقلی</span><input type="text" data-k="day|' + t + '|floor" value="' + esc(td && td.floor ? td.floor : floorFromGoals()) + '"></label>' +
+      '</div>';
+    h += '<div class="card"><h2>آماده‌سازی</h2>' +
+      check('day|' + t + '|prep1', 'وسایل و فضای کار فردا آماده است') +
+      check('day|' + t + '|prep2', 'گوشی دور از تخت، ساعت خواب مشخص') +
+      '</div>';
+    return h;
+  };
+
+  views.week = function () {
+    var k = todayKey();
+    var sat = saturdayOf(k);
+    var next = addDays(sat, 7);
+    var w = week(sat) || { results: [{}, {}, {}] };
+    var count = 0;
+    for (var i = 0; i < 7; i++) { var dd = day(addDays(sat, i)); if (dd && dd.mainDone) count++; }
+    var h = '<h1>هفته</h1><div class="date">' + shortDate(sat) + ' تا ' + shortDate(addDays(sat, 6)) + '</div>';
+    h += '<div class="stats"><div class="stat"><b>' + fa(count) + ' از ' + fa(7) + '</b><small>روز با کار اصلی انجام‌شده</small></div></div>';
+    h += '<div class="card"><h2>سه نتیجهٔ این هفته</h2>';
+    for (i = 0; i < 3; i++) {
+      var r = (w.results && w.results[i]) || {};
+      h += '<div class="row" style="align-items:center">' +
+        '<label class="check" style="flex:none"><input type="checkbox" data-k="wres|' + sat + '|' + i + '|done"' + (r.done ? ' checked' : '') + '></label>' +
+        '<input type="text" data-k="wres|' + sat + '|' + i + '|t" value="' + esc(r.t) + '" placeholder="نتیجهٔ ' + fa(i + 1) + '"></div>';
+    }
+    h += '</div><div class="card"><h2>مرور هفته</h2>';
+    h += '<label class="field"><span>نمره از ۱۰</span><select data-k="week|' + sat + '|score"><option value="">—</option>';
+    for (i = 1; i <= 10; i++) h += '<option value="' + i + '"' + (String(w.score) === String(i) ? ' selected' : '') + '>' + fa(i) + '</option>';
+    h += '</select></label>' +
+      text('week|' + sat + '|best', 'بهترین روز و چرا') +
+      text('week|' + sat + '|worst', 'بدترین روز و چرا') +
+      text('week|' + sat + '|waster', 'بزرگ‌ترین وقت‌کُش') +
+      text('week|' + sat + '|longer', 'چه چیزی بیشتر از انتظار طول کشید') +
+      text('week|' + sat + '|rule', 'قانون اگر-آنگاه', 'اگر … آنگاه …') + '</div>';
+    h += '<div class="card"><h2>هفتهٔ بعد</h2>';
+    for (i = 0; i < 3; i++) h += text('wres|' + next + '|' + i + '|t', 'نتیجهٔ ' + fa(i + 1));
+    h += text('day|' + next + '|main', 'کار اصلی شنبه') + '</div>';
+    return h;
+  };
+
+  function computeStats() {
+    var today = todayKey();
+    var first = firstDataDay();
+    var streak = 0, k = today;
+    if (!kept(day(k))) k = addDays(k, -1);
+    while (first && k >= first && kept(day(k))) { streak++; k = addDays(k, -1); }
+    var sat = saturdayOf(today), weekKept = 0;
+    for (var i = 0; i < 7; i++) if (kept(day(addDays(sat, i)))) weekKept++;
+    var total = 0, good = 0;
+    for (i = 0; i < 28; i++) {
+      k = addDays(today, -i);
+      if (!first || k < first) break;
+      if (k === today && !kept(day(k))) continue;
+      total++;
+      if (kept(day(k))) good++;
+    }
+    return { streak: streak, weekKept: weekKept, pct: total ? Math.round(good * 100 / total) : 0, total: total, first: first };
+  }
+
+  function advice(st) {
+    var out = [];
+    var today = todayKey();
+    var broken = 0, minOnly = 0, noPlan = 0, reasons = {};
+    for (var i = 1; i <= 14; i++) {
+      var k = addDays(today, -i);
+      if (!st.first || k < st.first) break;
+      var d = day(k);
+      if (!d || !d.main) noPlan++;
+      if (d && d.broken) broken++;
+      if (d && d.floorDone && !d.mainDone) minOnly++;
+      if (d && d.reason) { var r = String(d.reason).trim(); reasons[r] = (reasons[r] || 0) + 1; }
+    }
+    if (!st.first) { out.push('هنوز داده‌ای نیست. امشب برای فردا برنامه بریز.'); return out; }
+    if (!state.goals[0].title && !state.goals[1].title) out.push('هدف‌های ۱۲ هفته‌ای را در زبانهٔ «هدف‌ها» بنویس.');
+    if (noPlan >= 3) out.push('در دو هفتهٔ اخیر ' + fa(noPlan) + ' روز بدون برنامه شروع شد. برنامه‌ریزی شبانه را کوتاه‌تر کن، اما حذفش نکن.');
+    if (broken >= 3) out.push(fa(broken) + ' روز خراب در دو هفته. کار اصلی را کوچک‌تر و قدم اول را مشخص‌تر تعریف کن.');
+    if (minOnly >= 4) out.push('بیشتر روزها فقط حداقل انجام شده. شاید کار اصلی برای زمانی که داری بزرگ است.');
+    for (var r2 in reasons) if (reasons[r2] >= 2) { out.push('دلیل «' + esc(r2) + '» چند بار تکرار شده. برایش یک قانون اگر-آنگاه بنویس.'); break; }
+    if (st.pct >= 80 && st.total >= 7) out.push('عالی پیش می‌روی. ریتم را نگه دار و چیزی اضافه نکن.');
+    else if (st.total >= 7 && st.pct < 50) out.push('کمتر از نصف روزها حفظ شده. روی «فقط حداقل» تمرکز کن تا زنجیره برگردد.');
+    var w = week(saturdayOf(addDays(today, -7)));
+    if (w && !w.rule && st.total >= 7) out.push('هفتهٔ پیش قانون اگر-آنگاه نداشت. این هفته یکی بنویس.');
+    if (!out.length) out.push('ادامه بده. هر روز کار اصلی یا حداقل.');
+    return out;
+  }
+
+  views.progress = function () {
+    var st = computeStats();
+    var today = todayKey();
+    var h = '<h1>پیشرفت</h1><div class="date">' + longDate(today) + '</div>';
+    h += '<div class="stats">' +
+      '<div class="stat"><b>' + fa(st.streak) + '</b><small>روز پیاپی</small></div>' +
+      '<div class="stat"><b>' + fa(st.weekKept) + '</b><small>این هفته</small></div>' +
+      '<div class="stat"><b>' + fa(st.pct) + '٪</b><small>۲۸ روز اخیر</small></div></div>';
+    var start = saturdayOf(state.startDate);
+    h += '<div class="card"><h2>۱۲ هفته</h2><div class="grid"><span></span>';
+    var heads = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+    for (var i = 0; i < 7; i++) h += '<span class="hd">' + heads[i] + '</span>';
+    for (var w = 0; w < 12; w++) {
+      h += '<span class="wk">' + fa(w + 1) + '</span>';
+      for (i = 0; i < 7; i++) {
+        var k = addDays(start, w * 7 + i);
+        var d = day(k);
+        var cls = 'cell';
+        if (d && d.mainDone) cls += ' done';
+        else if (d && d.floorDone) cls += ' min';
+        else if (k < today && st.first && k >= st.first) cls += ' miss';
+        if (k === today) cls += ' today';
+        h += '<span class="' + cls + '" title="' + esc(shortDate(k)) + '"></span>';
+      }
+    }
+    h += '</div><div class="legend"><span><i style="background:var(--accent)"></i>انجام شد</span>' +
+      '<span><i style="background:var(--min)"></i>فقط حداقل</span>' +
+      '<span><i style="background:var(--miss)"></i>از دست رفت</span>' +
+      '<span><i style="outline:2px solid var(--text)"></i>امروز</span></div></div>';
+    var adv = advice(st);
+    h += '<div class="card"><h2>پیشنهاد</h2><ul class="advice">';
+    for (i = 0; i < adv.length; i++) h += '<li>' + adv[i] + '</li>';
+    h += '</ul></div>';
+    h += '<div class="card"><h2>بردهای سخت گذشته</h2>' + area('wins', 'هر خط یک برد', 'کارهای سختی که قبلاً از پسشان برآمدی') + '</div>';
+    return h;
+  };
+
+  views.goals = function () {
+    var h = '<h1>هدف‌ها</h1><div class="date">چرخهٔ ۱۲ هفته‌ای از ' + longDate(state.startDate) + '</div>';
+    for (var i = 0; i < 2; i++) {
+      h += '<div class="card"><h2>هدف ' + fa(i + 1) + '</h2>' +
+        text('goal|' + i + '|title', 'هدف ۱۲ هفته‌ای') +
+        text('goal|' + i + '|floor', 'حداقل روزانه', 'کوچک‌ترین کاری که هر روز ممکن است') + '</div>';
+    }
+    h += '<div class="card"><h2>چرخه</h2>' +
+      '<label class="field"><span>تاریخ شروع</span><input type="date" data-k="startDate" value="' + esc(state.startDate) + '"></label>' +
+      '<button type="button" class="btn ghost block" data-act="newcycle">شروع چرخهٔ جدید از این هفته</button></div>';
+    h += '<div class="card"><h2>پشتیبان</h2>' +
+      '<div class="row"><button type="button" class="btn" data-act="copy">کپی همهٔ داده‌ها</button></div>' +
+      '<p class="note" id="copynote"></p>' +
+      '<textarea id="backup" placeholder="متن پشتیبان را اینجا بچسبان" dir="ltr"></textarea>' +
+      '<div class="row" style="margin-top:10px"><button type="button" class="btn warn" data-act="restore">بازگردانی از متن</button></div>' +
+      '<p class="note" id="restorenote"></p></div>';
+    return h;
+  };
+
+  /* ---------- events ---------- */
+  function onField(e) {
+    var el = e.target;
+    var path = el.getAttribute && el.getAttribute('data-k');
+    if (!path) return;
+    if (el.type === 'checkbox') {
+      setVal(path, el.checked);
+      render();
+    } else {
+      setVal(path, el.value);
+      if (el.tagName === 'SELECT' || el.type === 'date') render();
+    }
+  }
+  app.addEventListener('input', onField);
+  app.addEventListener('change', function (e) { if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT' || e.target.type === 'date') return; onField(e); });
+
+  function note(id, msg) { var n = document.getElementById(id); if (n) n.textContent = msg; }
+
+  function copyText(s) {
+    var ta = document.getElementById('backup');
+    function fallback() {
+      ta.value = s;
+      ta.focus();
+      ta.select();
+      try { ta.setSelectionRange(0, s.length); } catch (e) {}
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      note('copynote', ok ? 'کپی شد.' : 'متن در کادر زیر است؛ آن را انتخاب و کپی کن.');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(s).then(function () { ta.value = s; note('copynote', 'کپی شد.'); }, fallback);
+    } else fallback();
+  }
+
+  app.addEventListener('click', function (e) {
+    var el = e.target;
+    while (el && el !== app && !el.getAttribute('data-act')) el = el.parentNode;
+    if (!el || el === app) return;
+    var act = el.getAttribute('data-act');
+    var k = todayKey();
+    if (act === 'quickplan') {
+      var d = day(k, true);
+      if (!d.floor) d.floor = floorFromGoals();
+      if (!d.main) { var inp = app.querySelector('[data-k="day|' + k + '|main"]'); if (inp) inp.focus(); return; }
+      save(); render();
+    } else if (act === 'break') { day(k, true).broken = true; save(); render(); }
+    else if (act === 'unbreak') { day(k, true).broken = false; save(); render(); }
+    else if (act === 'done-yes') { day(k, true).mainDone = true; save(); render(); }
+    else if (act === 'done-no') { day(k, true).mainDone = false; save(); render(); }
+    else if (act === 'newcycle') {
+      if (confirm('چرخهٔ جدید از شنبهٔ این هفته شروع شود؟ داده‌های قبلی حذف نمی‌شوند.')) {
+        state.startDate = saturdayOf(k); save(); render();
+      }
+    } else if (act === 'copy') copyText(JSON.stringify(state));
+    else if (act === 'restore') {
+      var raw = document.getElementById('backup').value.trim();
+      var parsed;
+      try { parsed = JSON.parse(raw); } catch (err) { note('restorenote', 'متن معتبر نیست.'); return; }
+      if (!parsed || typeof parsed !== 'object' || (!parsed.days && !parsed.goals)) { note('restorenote', 'این متن پشتیبان این برنامه نیست.'); return; }
+      if (!confirm('همهٔ داده‌های فعلی با این متن جایگزین شود؟')) return;
+      state = normalize(parsed);
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (err2) {}
+      render();
+      note('restorenote', 'بازگردانی شد.');
+    }
+  });
+
+  tabs.addEventListener('click', function (e) {
+    var el = e.target;
+    while (el && el !== tabs && !el.getAttribute('data-tab')) el = el.parentNode;
+    if (!el || el === tabs) return;
+    current = el.getAttribute('data-tab');
+    try { sessionStorage.setItem('planner12-tab', current); } catch (err) {}
+    render();
+    window.scrollTo(0, 0);
+  });
+
+  window.addEventListener('storage', function (e) { if (e.key === KEY) { state = load(); render(); } });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+
+  render();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
